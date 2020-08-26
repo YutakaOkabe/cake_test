@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  web:
+    build: ./docker/web/
+    ports:
+      - 80:80
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+  db:
+    image: postgres:12-alpine
+    environment: # postgresの初期設定（ユーザー名、パスワード、DB名を指定）
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cake_test
+    ports:
+      - 5433:5432
+    volumes:
+      - ./docker/db:/docker-entrypoint-initdb.d
+      - ./docker/db/.data:/var/lib/postgresql/data:delegated
