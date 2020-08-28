@@ -17,7 +17,7 @@ class ArticlesTable extends Table
     public function initialize(array $config): void
     {
         $this->addBehavior('Timestamp'); // createdやmodifiedカラムを自動的に更新
-        $this->belongsToMany('Tags'); // この行を追加
+        $this->belongsToMany('Tags'); // 多対多のアソシエーション
     }
 
     public function beforeSave(EventInterface $event, $entity, $options)
@@ -27,8 +27,10 @@ class ArticlesTable extends Table
         }
 
         if ($entity->isNew() && !$entity->slug) {
+            // Text::slug()でスラグを作成　日本語の場合はローマ字に変換される
             $sluggedTitle = Text::slug($entity->title);
             // スラグをスキーマで定義されている最大長に調整
+            // substr( 対象文字列, 開始位置 [, 文字数])で文字列を切り出す
             $entity->slug = substr($sluggedTitle, 0, 191);
         }
     }

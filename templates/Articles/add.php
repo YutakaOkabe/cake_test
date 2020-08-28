@@ -2,6 +2,8 @@
 
 <h1>記事の追加</h1>
 <?php
+    // create(モデルから渡ってきたエンティティ, [URLオプション])
+    // オプションなしの場合には現在のアクションのフォームということになる
     echo $this->Form->create($article);
     // 今はユーザーを直接記述
     echo $this->Form->control('user_id', ['type' => 'hidden', 'value' => 1]);

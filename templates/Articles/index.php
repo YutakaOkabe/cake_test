@@ -14,17 +14,20 @@
 <?php foreach ($articles as $article): ?>
     <tr>
         <td>
+            <!-- link(バリュー, [リンク先のアクション名, パラメータ]) -->
             <?= $this->Html->link($article->title, ['action' => 'view', $article->slug]) ?>
         </td>
         <td>
+            <!-- define ('DATE_RFC850', "l, d-M-y H:i:s T"); -->
             <?= $article->created->format(DATE_RFC850) ?>
         </td>
         <td>
             <?= $this->Html->link('編集', ['action' => 'edit', $article->slug]) ?>
+            <!-- JavaScript の確認ダイアログを表示してpostする -->
             <?= $this->Form->postLink(
                 '削除',
                 ['action' => 'delete', $article->slug],
-                ['confirm' => 'よろしいですか?'])
+                ['confirm' => 'この記事を削除してよろしいですか?'])
             ?>
         </td>
     </tr>

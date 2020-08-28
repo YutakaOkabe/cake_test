@@ -11,27 +11,37 @@ class ArticlesController extends AppController
 {
     public function initialize(): void
     {
+        // 必ず必要
         parent::initialize();
-
+        // コンポーネントをロード
         $this->loadComponent('Paginator');
-        $this->loadComponent('Flash'); // FlashComponent をインクルード
+        $this->loadComponent('Flash'); // フォームの処理後やデータの確認のために表示する一回限りのメッセージ通知
     }
 
     public function index()
     {
         $this->loadComponent('Paginator');
+        // Articlesテーブルの記事を全てページネーションした状態で出力
         $articles = $this->Paginator->paginate($this->Articles->find());
         $this->set(compact('articles'));
     }
 
     public function view($slug = null)
     {
+        // findByカラム名(値)　そのカラムで値が一致するデータを取ってくる
+        // firstOrFail()：first()メソッドの例外付きバージョンで戻り値が０件であった場合に例外を投げる
         $article = $this->Articles->findBySlug($slug)->firstOrFail();
         $this->set(compact('article'));
     }
 
     public function add()
     {
+        // データの検証の詳細は、hoge/Table.phpのvalidationメソッドに書く
+        // newEntity：新規追加、保存処理時　データの検証を行う
+        // newEnptyEntity：新規追加、保存処理時　データの検証を行わない
+        // patchEntity：データの更新時　データの検証を行う
+        // patchEntity(エンティティ, 保存するデータ)でマージ→save(エンティティ)
+
         $article = $this->Articles->newEmptyEntity();
         if ($this->request->is('post')) {
             $article = $this->Articles->patchEntity($article, $this->request->getData());
@@ -40,10 +50,10 @@ class ArticlesController extends AppController
             $article->user_id = 1;
 
             if ($this->Articles->save($article)) {
-                $this->Flash->success(__('Your article has been saved.'));
+                $this->Flash->success(__('記事が保存されました'));
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Unable to add your article.'));
+            $this->Flash->error(__('記事が保存できませんでした'));
         }
         // タグのリストを取得
         $tags = $this->Articles->Tags->find('list');
@@ -51,6 +61,7 @@ class ArticlesController extends AppController
         // ビューコンテキストに tags をセット
         $this->set('tags', $tags);
 
+        // エンティティをビューに渡す
         $this->set('article', $article);
     }
 
@@ -58,14 +69,16 @@ class ArticlesController extends AppController
 
     public function edit($slug)
     {
+        // スラグでレコードを指定
         $article = $this->Articles->findBySlug($slug)->contain('Tags')->firstOrFail();
+
         if ($this->request->is(['post', 'put'])) {
             $this->Articles->patchEntity($article, $this->request->getData());
             if ($this->Articles->save($article)) {
-                $this->Flash->success(__('Your article has been updated.'));
+                $this->Flash->success(__('記事が更新されました'));
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('Unable to update your article.'));
+            $this->Flash->error(__('記事の更新ができませんでした'));
         }
         // タグのリストを取得
         $tags = $this->Articles->Tags->find('list');
@@ -78,6 +91,7 @@ class ArticlesController extends AppController
 
     public function delete($slug)
     {
+        // postとdelete以外のリクエストはエラー
         $this->request->allowMethod(['post', 'delete']);
 
         $article = $this->Articles->findBySlug($slug)->firstOrFail();

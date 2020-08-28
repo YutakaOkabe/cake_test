@@ -9,7 +9,7 @@ class Article extends Entity
 {
     // 一括代入でどのプロパティーの値の変更を可能にするか
     protected $_accessible = [
-        '*' => true,
+        '*' => true, // 全て
         'id' => false,
         'slug' => false,
     ];
