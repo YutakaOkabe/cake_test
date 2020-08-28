@@ -26,13 +26,22 @@ class ArticlesController extends AppController
         $this->set(compact('articles'));
     }
 
+
+
     public function view($slug = null)
     {
         // findByカラム名(値)　そのカラムで値が一致するデータを取ってくる
         // firstOrFail()：first()メソッドの例外付きバージョンで戻り値が０件であった場合に例外を投げる
-        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        // $article = $this->Articles->findBySlug($slug)->firstOrFail();
+
+        // ユーザーtableからの情報も含んでビューに渡す
+        $article = $this->Articles->get($slug, [
+            'contain' => 'Users'
+        ]);
         $this->set(compact('article'));
     }
+
+
 
     public function add()
     {
@@ -89,6 +98,8 @@ class ArticlesController extends AppController
         $this->set('article', $article);
     }
 
+
+
     public function delete($slug)
     {
         // postとdelete以外のリクエストはエラー
@@ -100,6 +111,8 @@ class ArticlesController extends AppController
             return $this->redirect(['action' => 'index']);
         }
     }
+
+
 
     public function tags()
     {

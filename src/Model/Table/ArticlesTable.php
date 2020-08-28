@@ -17,6 +17,7 @@ class ArticlesTable extends Table
     public function initialize(array $config): void
     {
         $this->addBehavior('Timestamp'); // createdやmodifiedカラムを自動的に更新
+        $this->belongsTo('Users'); // 一対多のアソシエーション
         $this->belongsToMany('Tags'); // 多対多のアソシエーション
     }
 
@@ -43,7 +44,9 @@ class ArticlesTable extends Table
             ->maxLength('title', 255)
 
             ->notEmptyString('body')
-            ->minLength('body', 5);
+            ->minLength('body', 5)
+
+            ->notEmptyString('user_id');
 
         return $validator;
     }
