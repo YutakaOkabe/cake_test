@@ -3,9 +3,11 @@ FROM php:7.3-apache
 RUN set -ex apk --no-cache add postgresql-dev libpq-dev && \
     apt-get update && apt-get install -y libpq-dev \
     libicu-dev \
-    vim \
+    vim zip\
     less \
     && docker-php-ext-install pdo pdo_pgsql pgsql mbstring intl
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/webroot
 
