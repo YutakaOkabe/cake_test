@@ -13,6 +13,7 @@
                 <tr>
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('title') ?></th>
+                    <th><?= $this->Paginator->sort('Number of Articles') ?></th>
                     <th><?= $this->Paginator->sort('created') ?></th>
                     <th><?= $this->Paginator->sort('modified') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
@@ -23,6 +24,7 @@
                 <tr>
                     <td><?= $this->Number->format($tag->id) ?></td>
                     <td><?= h($tag->title) ?></td>
+                    <td><?= count($tag->articles) ?></td>
                     <td><?= h($tag->created) ?></td>
                     <td><?= h($tag->modified) ?></td>
                     <td class="actions">
