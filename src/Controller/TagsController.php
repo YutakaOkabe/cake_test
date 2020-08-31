@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Model\Table\ArticlesTable;
+
 /**
  * Tags Controller
  *
@@ -18,8 +20,7 @@ class TagsController extends AppController
      */
     public function index()
     {
-        $tags = $this->paginate($this->Tags);
-
+        $tags = $this->paginate($this->Tags->find()->contain(['Articles']));
         $this->set(compact('tags'));
     }
 
@@ -33,7 +34,9 @@ class TagsController extends AppController
     public function view($id = null)
     {
         $tag = $this->Tags->get($id, [
-            'contain' => ['Articles'],
+            'contain' => [
+                'Articles' => ['Users']
+            ]
         ]);
 
         $this->set(compact('tag'));

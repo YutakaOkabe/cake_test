@@ -16,13 +16,16 @@ class ArticlesController extends AppController
         // コンポーネントをロード
         $this->loadComponent('Paginator');
         $this->loadComponent('Flash'); // フォームの処理後やデータの確認のために表示する一回限りのメッセージ通知
+        $this->loadModel('Tags');
+        
     }
 
     public function index()
     {
         $this->loadComponent('Paginator');
-        // Articlesテーブルの記事を全てページネーションした状態で出力
-        $articles = $this->Paginator->paginate($this->Articles->find());
+                // Tagsテーブルと紐づいたArticlesテーブルの記事を全てページネーションした状態で出力
+        $articles = $this->Paginator->paginate($this->Articles->find()->contain(['Users', 'Tags']));
+
         $this->set(compact('articles'));
     }
 
@@ -35,9 +38,12 @@ class ArticlesController extends AppController
         // $article = $this->Articles->findBySlug($slug)->firstOrFail();
 
         // ユーザーtableからの情報も含んでビューに渡す
-        $article = $this->Articles->get($slug, [
-            'contain' => 'Users'
-        ]);
+        // dd($slug);
+        // $article = $this->Articles->findBySlug($slug, [
+        //     'contain' => ['Users', 'Tags']
+        // ])->first();
+        $article = $this->Articles->findBySlug($slug)->contain(['Users', 'Tags'])->first();
+
         $this->set(compact('article'));
     }
 
@@ -55,8 +61,7 @@ class ArticlesController extends AppController
         if ($this->request->is('post')) {
             $article = $this->Articles->patchEntity($article, $this->request->getData());
 
-            // user_id の決め打ちは一時的なもので、あとで認証を構築する際に削除されます。
-            $article->user_id = 1;
+            $article->user_id = $this->Authentication->getIdentity()->id;
 
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('記事が保存されました'));
@@ -64,14 +69,15 @@ class ArticlesController extends AppController
             }
             $this->Flash->error(__('記事が保存できませんでした'));
         }
+
         // タグのリストを取得
-        $tags = $this->Articles->Tags->find('list');
+        // ロードが必要なパターン
+        $tags = $this->Tags->find('list');
+        // ロードが必要ないパターン
+        // $tags = $this->Articles->Tags->find('list');
 
         // ビューコンテキストに tags をセット
-        $this->set('tags', $tags);
-
-        // エンティティをビューに渡す
-        $this->set('article', $article);
+        $this->set(compact(['article','tags']));
     }
 
 

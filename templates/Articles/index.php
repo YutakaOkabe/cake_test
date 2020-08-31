@@ -5,6 +5,8 @@
 <table>
     <tr>
         <th>タイトル</th>
+        <th>ユーザー</th>
+        <th>タグ</th>
         <th>作成日時</th>
         <th>操作</th>
     </tr>
@@ -18,8 +20,21 @@
             <?= $this->Html->link($article->title, ['action' => 'view', $article->slug]) ?>
         </td>
         <td>
+            <?= h($article->user->email); ?>
+        </td>
+        <td>
+            <?php $tags = $article->tags ?>
+            <?php foreach ($tags as $tag): ?>
+                <?= $this->Html->link($tag->title, [
+                    'controller' => 'Tags',
+                    'action' => 'view',
+                    $tag->id]); ?>
+            <?php endforeach; ?>
+        </td>
+        <td>
             <!-- define ('DATE_RFC850', "l, d-M-y H:i:s T"); -->
-            <?= $article->created->format(DATE_RFC850) ?>
+            <!-- <?= $article->created->format(DATE_RFC850) ?> -->
+            <?= $article->created ?>
         </td>
         <td>
             <?= $this->Html->link('編集', ['action' => 'edit', $article->slug]) ?>

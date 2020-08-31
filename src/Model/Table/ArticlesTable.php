@@ -18,7 +18,11 @@ class ArticlesTable extends Table
     {
         $this->addBehavior('Timestamp'); // createdやmodifiedカラムを自動的に更新
         $this->belongsTo('Users'); // 一対多のアソシエーション
-        $this->belongsToMany('Tags'); // 多対多のアソシエーション
+        $this->belongsToMany('Tags', [
+            'foreignKey' => 'article_id',
+            'targetForeignKey' => 'tag_id',
+            'joinTable' => 'articles_tags',
+        ]); // 多対多のアソシエーション
     }
 
     public function beforeSave(EventInterface $event, $entity, $options)

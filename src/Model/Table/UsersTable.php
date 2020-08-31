@@ -44,12 +44,8 @@ class UsersTable extends Table
         $this->setTable('users');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-
         $this->addBehavior('Timestamp');
-
-        $this->hasMany('Articles', [
-            'foreignKey' => 'user_id',
-        ]);
+        $this->hasMany('Articles');
     }
 
     /**
