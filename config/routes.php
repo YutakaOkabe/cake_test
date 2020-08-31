@@ -5,8 +5,8 @@ use Cake\Routing\RouteBuilder;
 $routes->setRouteClass(DashedRoute::class);
 
 $routes->scope('/', function (RouteBuilder $builder) {
-    $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-    $builder->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
+    $builder->connect('/', ['controller' => 'Articles', 'action' => 'index']);
+    // $builder->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
 
     // Add this
     // New route we're adding for our tagged action.
