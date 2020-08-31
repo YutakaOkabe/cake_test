@@ -157,6 +157,15 @@ th {
 .input.radio label:first-of-type {
     margin-bottom: 2.0rem;
 }
+/* .input .select .checkbox{
+    display: inline-block;
+    margin-right: 1.5rem;
+}
+.input .select .checkbox label {
+    font-size: 1.7rem;
+    font-weight: normal;
+} */
+
 
 /* Paginator */
 .paginator {
